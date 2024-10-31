@@ -8,7 +8,6 @@
 
 **duration-SEPTEMBER TO NOVEMBER**
 
-Here’s an overview of the **Malware Analysis Sandbox** project, designed to safely execute and analyze malware behavior in an isolated environment.
 
 ### Project Overview
 
