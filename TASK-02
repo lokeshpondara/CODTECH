@@ -1,0 +1,46 @@
+import subprocess
+import os
+import time
+import psutil
+from datetime import datetime
+
+def run_malware(file_path):
+    # Run the malware sample in a subprocess
+    process = subprocess.Popen(file_path, shell=True)
+    print(f"Malware process started with PID: {process.pid}")
+    return process
+
+def monitor_process(pid):
+    # Monitor CPU, Memory, and I/O activities
+    try:
+        proc = psutil.Process(pid)
+        with open("process_log.txt", "a") as log:
+            log.write(f"\nMonitoring started at {datetime.now()} for PID {pid}\n")
+            while proc.is_running():
+                cpu = proc.cpu_percent(interval=1)
+                memory = proc.memory_info().rss / (1024 * 1024)
+                log.write(f"CPU: {cpu}%, Memory: {memory}MB\n")
+                time.sleep(1)  # Monitor every second
+    except psutil.NoSuchProcess:
+        print("Process has ended.")
+
+def capture_network_traffic():
+    # Run Wireshark or tshark to capture packets (requires Wireshark installed)
+    capture_cmd = ["tshark", "-i", "1", "-a", "duration:60", "-w", "network_capture.pcap"]
+    subprocess.Popen(capture_cmd)
+    print("Capturing network traffic for 60 seconds...")
+
+def main():
+    file_path = input("Enter the path to the malware sample: ")
+    
+    # Start network capture
+    capture_network_traffic()
+
+    # Start the malware process
+    process = run_malware(file_path)
+    
+    # Monitor the malware process
+    monitor_process(process.pid)
+
+if __name__ == "__main__":
+    main()
